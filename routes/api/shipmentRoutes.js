@@ -1,12 +1,6 @@
 const router = require("express").Router();
 // const app = require("express");
-const {
-  readFromFile,
-  readAndAppend,
-  writeToFile,
-  readAndDelete,
-} = require("../helpers/fsUtils");
-const { v4: uuidv4 } = require("uuid");
+const { readFromFile, readAndAppend } = require("../../helpers/fsUtils");
 
 router.get("/shipments", (req, res) => {
   fetch; // FETCH route for API Call?
