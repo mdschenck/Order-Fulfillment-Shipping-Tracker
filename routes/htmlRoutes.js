@@ -1,6 +1,12 @@
 const path = require("path");
 const htmlRouter = require("express").Router();
 
+
+// Home HTML Route
+htmlRouter.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "../public/index.html"));
+});
+
 // Notes HTML Route
 htmlRouter.get("/notes", (req, res) => {
   res.sendFile(path.join(__dirname, "../public/notes.html"));
