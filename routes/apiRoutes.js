@@ -9,32 +9,39 @@ var auth = { "Authorization" : `Basic ${credentials}` };
 
 router.get("/shipments", (req, res) => {
   fetch(`https://ssapi.shipstation.com/shipments`, { headers : auth })
-  .then(res => res.text())
-  .then(text => console.log(text))
-  .then(res => res.json())
+  // .then(res => res.text())
+  // .then(text => console.log(text))
+  .then(res => res.json(res))
   .then(json => console.log(json))
    // FETCH route for API Call?
-  // readFromFile("./db/db.json").then((data) => res.json(JSON.parse(data)));
+   console.log("GET Shipments Route Called")
 
-  // console.log("Shipments GET Route Called");
-  // console.log(res.json)
-  // console.log(res)
-  // console.log("It's Doing Something at least?")
+   res.json.forEach(
+      console.log(res.shipment.orderNumber)
+    );
 });
 
 
 router.get("/shipments/:shipDate", (req, res) => {
-  fetch(`https://ssapi.shipstation.com/shipments?shipDateStart=${req.params.shipDate}&shipDateEnd-${req.params.shipDate}`, { headers : auth })
+  fetch(`https://ssapi.shipstation.com/shipments?shipDateStart=${req.params.shipDate}&shipDateEnd=${req.params.shipDate}&pageSize=500`, { headers : auth })
   .then(res => res.json(res))
-  .then(text => console.log(text))
-  // .then(res => res.json)
+  .then(res => console.log(res))
   // .then(json => console.log(json)); 
-  // FETCH route for API Call?
-  // readFromFile("./db/db.json").then((data) => res.json(JSON.parse(data)));
   console.log("Get Shipments By shipDate Route Called");
-  console.log(res.json)
-  console.log(res)
-  console.log("It's Doing Something Else at least?")
+
+  // res.json.forEach(
+  //   console.log(res.orderNumber)
+  // );
+
+  // Data Needed:
+  // orderNumber
+  // trackingNumber
+  // weight.value (in Ounces / 16 trim to 2 digits)
+  // shipDate 
+  // shipmentItems: ??
+
+  
+
 });
 
 
