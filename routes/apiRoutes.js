@@ -1,43 +1,66 @@
 const router = require("express").Router();
-// import fetch from 'node-fetch';
-// const app = require("express");
+const fetch = require("node-fetch");
+const app = require("express");
 const { readFromFile, readAndAppend } = require("../helpers/fsUtils");
 
 const credentials ='ZTFmNTQ1NWRlM2ZjNDcwNGE0OTJjMTI1MzYyMzc3ZGE6ZWRjZGNhYTQxYTcxNGMxMTljZGZlOWM0NjcxOTViNTY=';
 
 var auth = { "Authorization" : `Basic ${credentials}` };
 
-
-
 router.get("/shipments", (req, res) => {
-  fetch(`https://ssapi.shipstation.com/shipments`, { headers : auth }); // FETCH route for API Call?
-  readFromFile("./db/db.json").then((data) => res.json(JSON.parse(data)));
-  console.log("Shipments GET Route Called");
+  fetch(`https://ssapi.shipstation.com/shipments`, { headers : auth })
+  .then(res => res.text())
+  .then(text => console.log(text))
+  .then(res => res.json())
+  .then(json => console.log(json))
+   // FETCH route for API Call?
+  // readFromFile("./db/db.json").then((data) => res.json(JSON.parse(data)));
+
+  // console.log("Shipments GET Route Called");
+  // console.log(res.json)
+  // console.log(res)
+  // console.log("It's Doing Something at least?")
+});
+
+
+router.get("/shipments/:shipDate", (req, res) => {
+  fetch(`https://ssapi.shipstation.com/shipments?shipDateStart=${req.params.shipDate}&shipDateEnd-${req.params.shipDate}`, { headers : auth })
+  .then(res => res.json(res))
+  .then(text => console.log(text))
+  // .then(res => res.json)
+  // .then(json => console.log(json)); 
+  // FETCH route for API Call?
+  // readFromFile("./db/db.json").then((data) => res.json(JSON.parse(data)));
+  console.log("Get Shipments By shipDate Route Called");
   console.log(res.json)
-  console.log(this.data)
+  console.log(res)
+  console.log("It's Doing Something Else at least?")
 });
 
 
 
-router.get('/shipments/:shipDate', async (req, res) => {
-  try {
-    const uri = `https://ssapi.shipstation.com/shipments?shipDateStart=${req.params.shipDate}&shipDateEnd-${shipDateEnd}` 
-    // { headers : auth }
-    ;
+// router.get('/shipments/:shipDate', async (req, res) => {
+//   try {
+//     const uri = `https://ssapi.shipstation.com/shipments?shipDateStart=${req.params.shipDate}&shipDateEnd-${req.params.shipDate}` 
+//     { headers : auth }
+//     ;
 
-    const response = await fetch(uri, {
-      method: 'GET',
-      mode: 'cors',
-      headers: { 'Content-Type': 'application/json' }
-    });
+//     const response = await fetch(uri, {
+//       method: 'GET',
+//       mode: 'cors',
+//       headers: { 'Content-Type': 'application/json' }
+//     });
 
-    return res.json(response);
-    console.log(response);
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).send('server error');
-  }
-});
+//     console.log("Get Shipment by shipDate Called")
+//     console.log(response);
+
+//     return res.json(response);
+
+//   } catch (err) {
+//     console.error(err.message);
+//     res.status(500).send('server error');
+//   }
+// });
 
 
 

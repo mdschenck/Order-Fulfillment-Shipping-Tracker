@@ -1,14 +1,14 @@
 {
-  "name": "note-taker",
+  "name": "Shipprr",
   "version": "1.0.0",
-  "description": "A remotely hosted note taking application.",
+  "description": "Shipment Tracking Application.",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mdschenck/Note-Taker.git"
+    "url": "https://github.com/mdschenck/Order-Fulfillment-Shipping-Tracker"
   },
   "keywords": [],
   "author": "",
@@ -19,6 +19,7 @@
   "homepage": "https://github.com/mdschenck/Note-Taker#readme",
   "dependencies": {
     "express": "^4.18.1",
+    "node-fetch": "^2.6.1",
     "nodemon": "^2.0.16",
     "uuid": "^8.3.2"
   }
