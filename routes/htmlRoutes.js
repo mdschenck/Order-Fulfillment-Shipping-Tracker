@@ -8,9 +8,19 @@ htmlRouter.get("/", (req, res) => {
 });
 
 // Notes HTML Route
-htmlRouter.get("/notes", (req, res) => {
+htmlRouter.get("/success", (req, res) => {
+  res.sendFile(path.join(__dirname, "../public/success.html"));
+});
+
+htmlRouter.get("/error", (req, res) => {
+  res.sendFile(path.join(__dirname, "../public/error.html"));
+});
+
+
+htmlRouter.get("/shipments/2022-08-18", (req, res) => {
   res.sendFile(path.join(__dirname, "../public/notes.html"));
 });
+
 
 // 404 Error HTML Route
 htmlRouter.get("*", (req, res) => {
