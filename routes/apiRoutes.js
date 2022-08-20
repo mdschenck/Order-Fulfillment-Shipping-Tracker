@@ -1,7 +1,10 @@
 const router = require("express").Router();
 const fetch = require("node-fetch");
 const app = require("express");
+const fs = require('fs');
+const converter = require("json-2-csv");
 const { readFromFile, readAndAppend } = require("../helpers/fsUtils");
+const { Console } = require("console");
 
 const credentials ='ZTFmNTQ1NWRlM2ZjNDcwNGE0OTJjMTI1MzYyMzc3ZGE6ZWRjZGNhYTQxYTcxNGMxMTljZGZlOWM0NjcxOTViNTY=';
 
@@ -9,32 +12,83 @@ var auth = { "Authorization" : `Basic ${credentials}` };
 
 router.get("/shipments", (req, res) => {
   fetch(`https://ssapi.shipstation.com/shipments`, { headers : auth })
-  .then(res => res.text())
-  .then(text => console.log(text))
-  .then(res => res.json())
+  // .then(res => res.text())
+  // .then(text => console.log(text))
+  .then(res => res.json(res))
   .then(json => console.log(json))
    // FETCH route for API Call?
-  // readFromFile("./db/db.json").then((data) => res.json(JSON.parse(data)));
+   console.log("GET Shipments Route Called")
 
-  // console.log("Shipments GET Route Called");
-  // console.log(res.json)
-  // console.log(res)
-  // console.log("It's Doing Something at least?")
+   res.json.forEach(
+      console.log(res.shipment.orderNumber)
+    );
 });
 
 
 router.get("/shipments/:shipDate", (req, res) => {
-  fetch(`https://ssapi.shipstation.com/shipments?shipDateStart=${req.params.shipDate}&shipDateEnd-${req.params.shipDate}`, { headers : auth })
+  fetch(`https://ssapi.shipstation.com/shipments?shipDateStart=${req.params.shipDate}&shipDateEnd=${req.params.shipDate}&pageSize=5`, { headers : auth })
   .then(res => res.json(res))
-  .then(text => console.log(text))
-  // .then(res => res.json)
+  .then(res => console.log(res))
   // .then(json => console.log(json)); 
-  // FETCH route for API Call?
-  // readFromFile("./db/db.json").then((data) => res.json(JSON.parse(data)));
   console.log("Get Shipments By shipDate Route Called");
-  console.log(res.json)
-  console.log(res)
-  console.log("It's Doing Something Else at least?")
+
+  // console.log(res.shipments[0].orderNumber)
+
+const test = [
+  {
+    "orderNumber": "1823923",
+    "trackingNumber": "1z23349239239239",
+    "shippingDate": "2022-08-16"
+  },
+  {
+    "orderNumber": "18999923",
+    "trackingNumber": "1z23349239239239",
+    "shippingDate": "2022-08-16"
+  },
+  {
+    "orderNumber": "12132313",
+    "trackingNumber": "1z233492sdfds239",
+    "shippingDate": "2022-08-16"
+  },
+  {
+    "orderNumber": "546455464",
+    "trackingNumber": "1z233sdfdf39239",
+    "shippingDate": "2022-08-16"
+  }
+  ];
+
+  converter.json2csv(test, (err, csv) => {
+    if (err) {
+        throw err;
+    }
+
+    // print CSV string
+    console.log(csv);
+
+    // write CSV to a file
+    fs.writeFileSync('test.csv', csv);
+
+    });
+
+  // res.json.forEach(
+  //   console.log(res.orderNumber)
+  // );
+
+  // Data Needed:
+  // orderNumber
+  // trackingNumber
+  // weight.value (in Ounces / 16 trim to 2 digits)
+  // shipDate 
+  // shipmentItems: ??
+
+
+  if (res) {
+    console.log("Success!")
+    location.assign= "../public/success"
+  } else {
+    console.log("Error processing request- Please try again")
+    location.assign= "../public/error"
+  }
 });
 
 
