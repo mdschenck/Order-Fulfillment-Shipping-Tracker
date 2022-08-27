@@ -5,8 +5,13 @@ const fs = require('fs');
 const converter = require("json-2-csv");
 const { readFromFile, readAndAppend } = require("../helpers/fsUtils");
 const { Console } = require("console");
+const { reset } = require("nodemon");
 
+// SHIPSTATION API CREDENTIALS (BASIC Auth)
 const credentials ='ZTFmNTQ1NWRlM2ZjNDcwNGE0OTJjMTI1MzYyMzc3ZGE6ZWRjZGNhYTQxYTcxNGMxMTljZGZlOWM0NjcxOTViNTY=';
+
+// SET THE RESPONSE PAGE SIZE HERE:
+const responsePageSize = 5;
 
 var auth = { "Authorization" : `Basic ${credentials}` };
 
@@ -26,37 +31,84 @@ router.get("/shipments", (req, res) => {
 
 
 router.get("/shipments/:shipDate", (req, res) => {
-  fetch(`https://ssapi.shipstation.com/shipments?shipDateStart=${req.params.shipDate}&shipDateEnd=${req.params.shipDate}&pageSize=5`, { headers : auth })
-  // .then(res => res.json(res))
-  // .then(res => console.log(res))
-  .then(res => console.log(`"Order Number":"` + JSON.parse(res) + `"`))
-  // .then(json => console.log(json)); 
-  console.log("Get Shipments By shipDate Route Called");
+
+  let i = 0;
+
+  fetch(`https://ssapi.shipstation.com/shipments?shipDateStart=${req.params.shipDate}&shipDateEnd=${req.params.shipDate}&includeShipmentItems=true&pageSize=${responsePageSize}`, { headers : auth })
+  .then(res => res.json(res))
+
+
+  // Convert Needed Response Parameters Into New JSON:
+
+  // .then(res => JSON.parse(`
+  //   {
+  // "Order Number":"` + res.shipments[i].orderNumber + `", 
+  // "Ship Date":"` + res.shipments[i].shipDate + `", 
+  // "Tracking Number":"` + res.shipments[i].trackingNumber + `", 
+  // "Weight":"` + res.shipments[i].weight.value + `", 
+  // "Item":"` + res.shipments[i].shipmentItems[1] + `",
+  // "Recipient Name":"` + res.shipments[i].shipTo.name + `"}
+  // `
+  // ))
+
+
+
+  // .then(res => console.log(`
+  // "Order Number":"` + res.shipments[i].orderNumber + `", \n
+  // "Ship Date":"` + res.shipments[i].shipDate + `", \n
+  // "Tracking Number":"` + res.shipments[i].trackingNumber + `", \n
+  // "Weight":"` + res.shipments[i].weight.value + `", \n
+  // "Item":"` + res.shipments[i].shipmentItems[1] + `", \n
+  // "Recipient Name":"` + res.shipments[i].shipTo.name + `"`
+  // ))
+
+
+  // console.log("Get Shipments By shipDate Route Called");
 
   // console.log(res.shipments[0].orderNumber)
+.then(res => {
+const test = `[
+  {
+"OrderNumber": "` + res.shipments[i].orderNumber + `", 
+"ShipDate": "` + res.shipments[i].shipDate + `", 
+"TrackingNumber": "` + res.shipments[i].trackingNumber + `", 
+"Weight": "` + res.shipments[i].weight.value + `", 
+"Item": "` + res.shipments[i].shipmentItems[1] + `", 
+"RecipientName": "` + res.shipments[i].shipTo.name + `"
+},
+{
+  "OrderNumber": "` + res.shipments[i].orderNumber + `",  
+  "ShipDate": "` + res.shipments[i].shipDate + `",  
+  "TrackingNumber": "` + res.shipments[i].trackingNumber + `", 
+  "Weight": "` + res.shipments[i].weight.value + `", 
+  "Item": "` + res.shipments[i].shipmentItems[1] + `", 
+  "RecipientName": "` + res.shipments[i].shipTo.name + `"
+}
+]`;
 
-const test = [
-  {
-    "orderNumber": "1823923",
-    "trackingNumber": "1z23349239239239",
-    "shippingDate": "2022-08-16"
-  },
-  {
-    "orderNumber": "18999923",
-    "trackingNumber": "1z23349239239239",
-    "shippingDate": "2022-08-16"
-  },
-  {
-    "orderNumber": "12132313",
-    "trackingNumber": "1z233492sdfds239",
-    "shippingDate": "2022-08-16"
-  },
-  {
-    "orderNumber": "546455464",
-    "trackingNumber": "1z233sdfdf39239",
-    "shippingDate": "2022-08-16"
-  }
-  ];
+console.log(test)
+// [
+//   {
+//     "orderNumber": "1823923",
+//     "trackingNumber": "1z23349239239239",
+//     "shippingDate": "2022-08-16"
+//   },
+//   {
+//     "orderNumber": "18999923",
+//     "trackingNumber": "1z23349239239239",
+//     "shippingDate": "2022-08-16"
+//   },
+//   {
+//     "orderNumber": "12132313",
+//     "trackingNumber": "1z233492sdfds239",
+//     "shippingDate": "2022-08-16"
+//   },
+//   {
+//     "orderNumber": "546455464",
+//     "trackingNumber": "1z233sdfdf39239",
+//     "shippingDate": "2022-08-16"
+//   }
+//   ];
 
   converter.json2csv(test, (err, csv) => {
     if (err) {
@@ -70,7 +122,7 @@ const test = [
     fs.writeFileSync('test.csv', csv);
 
     });
-
+  });
   // res.json.forEach(
   //   console.log(res.orderNumber)
   // );
@@ -86,7 +138,7 @@ const test = [
   if (res) {
     console.log("Success!")
     // window.location.assign= "../public/success"
-    window.location.assign("/success");
+    // window.location.assign("/success");
   } else {
     console.log("Error processing request- Please try again")
     location.assign= "../public/error"
