@@ -27,8 +27,9 @@ router.get("/shipments", (req, res) => {
 
 router.get("/shipments/:shipDate", (req, res) => {
   fetch(`https://ssapi.shipstation.com/shipments?shipDateStart=${req.params.shipDate}&shipDateEnd=${req.params.shipDate}&pageSize=5`, { headers : auth })
-  .then(res => res.json(res))
-  .then(res => console.log(res))
+  // .then(res => res.json(res))
+  // .then(res => console.log(res))
+  .then(res => console.log(`"Order Number":"` + JSON.parse(res) + `"`))
   // .then(json => console.log(json)); 
   console.log("Get Shipments By shipDate Route Called");
 
@@ -84,7 +85,8 @@ const test = [
 
   if (res) {
     console.log("Success!")
-    location.assign= "../public/success"
+    // window.location.assign= "../public/success"
+    window.location.assign("/success");
   } else {
     console.log("Error processing request- Please try again")
     location.assign= "../public/error"
