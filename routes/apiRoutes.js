@@ -33,6 +33,8 @@ router.get("/shipments", (req, res) => {
 router.get("/shipments/:shipDate", (req, res) => {
 
   let i = 0;
+  let j = 1;
+  let k = 2;
 
   fetch(`https://ssapi.shipstation.com/shipments?shipDateStart=${req.params.shipDate}&shipDateEnd=${req.params.shipDate}&includeShipmentItems=true&pageSize=${responsePageSize}`, { headers : auth })
   .then(res => res.json(res))
@@ -67,50 +69,37 @@ router.get("/shipments/:shipDate", (req, res) => {
 
   // console.log(res.shipments[0].orderNumber)
 .then(res => {
-const test = `[
-  {
-"OrderNumber": "` + res.shipments[i].orderNumber + `", 
-"ShipDate": "` + res.shipments[i].shipDate + `", 
-"TrackingNumber": "` + res.shipments[i].trackingNumber + `", 
-"Weight": "` + res.shipments[i].weight.value + `", 
-"Item": "` + res.shipments[i].shipmentItems[1] + `", 
-"RecipientName": "` + res.shipments[i].shipTo.name + `"
+const shipments = [
+{
+"orderNumber": `${res.shipments[i].orderNumber}`, 
+"shipDate": `${res.shipments[i].shipDate}`,
+"TrackingNumber": `${res.shipments[i].trackingNumber}`, 
+"Weight": `${res.shipments[i].weight.value}`, 
+"Item": `${res.shipments[i].shipmentItems[1]}`, 
+"RecipientName": `${res.shipments[i].shipTo.name}`
 },
 {
-  "OrderNumber": "` + res.shipments[i].orderNumber + `",  
-  "ShipDate": "` + res.shipments[i].shipDate + `",  
-  "TrackingNumber": "` + res.shipments[i].trackingNumber + `", 
-  "Weight": "` + res.shipments[i].weight.value + `", 
-  "Item": "` + res.shipments[i].shipmentItems[1] + `", 
-  "RecipientName": "` + res.shipments[i].shipTo.name + `"
-}
-]`;
+"orderNumber": `${res.shipments[j].orderNumber}`, 
+"shipDate": `${res.shipments[j].shipDate}`,
+"TrackingNumber": `${res.shipments[j].trackingNumber}`, 
+"Weight": `${res.shipments[j].weight.value}`, 
+"Item": `${res.shipments[j].shipmentItems[1]}`, 
+"RecipientName": `${res.shipments[j].shipTo.name}`
+},
+{
+"orderNumber": `${res.shipments[k].orderNumber}`, 
+"shipDate": `${res.shipments[k].shipDate}`,
+"TrackingNumber": `${res.shipments[k].trackingNumber}`, 
+"Weight": `${res.shipments[k].weight.value}`, 
+"Item": `${res.shipments[k].shipmentItems[1]}`, 
+"RecipientName": `${res.shipments[k].shipTo.name}`
+ }
+];
 
-console.log(test)
-// [
-//   {
-//     "orderNumber": "1823923",
-//     "trackingNumber": "1z23349239239239",
-//     "shippingDate": "2022-08-16"
-//   },
-//   {
-//     "orderNumber": "18999923",
-//     "trackingNumber": "1z23349239239239",
-//     "shippingDate": "2022-08-16"
-//   },
-//   {
-//     "orderNumber": "12132313",
-//     "trackingNumber": "1z233492sdfds239",
-//     "shippingDate": "2022-08-16"
-//   },
-//   {
-//     "orderNumber": "546455464",
-//     "trackingNumber": "1z233sdfdf39239",
-//     "shippingDate": "2022-08-16"
-//   }
-//   ];
+console.log(shipments)
 
-  converter.json2csv(test, (err, csv) => {
+
+  converter.json2csv(shipments, (err, csv) => {
     if (err) {
         throw err;
     }
@@ -119,10 +108,13 @@ console.log(test)
     console.log(csv);
 
     // write CSV to a file
-    fs.writeFileSync('test.csv', csv);
+    fs.writeFileSync(`Shipments_${req.params.shipDate}.csv`, csv);
 
     });
   });
+
+
+
   // res.json.forEach(
   //   console.log(res.orderNumber)
   // );
